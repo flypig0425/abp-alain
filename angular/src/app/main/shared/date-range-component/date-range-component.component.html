@@ -1,0 +1,22 @@
+<div>
+  <nz-radio-group [ngModel]="selectedType" (ngModelChange)="refreshRangeType($event)">
+    <label nz-radio-button nzValue="day">
+      <span>日</span>
+    </label>
+    <label nz-radio-button nzValue="week">
+      <span>周</span>
+    </label>
+    <label nz-radio-button nzValue="month">
+      <span>月</span>
+    </label>
+    <label nz-radio-button nzValue="year">
+      <span>年</span>
+    </label>
+  </nz-radio-group>
+  <div nz-row>
+      <nz-date-picker *ngIf="selectedType == 'day'" nzFormat="yyyy-MM-dd" [ngModel]="data" (ngModelChange)="refreshDateRange($event)"></nz-date-picker>
+      <nz-week-picker *ngIf="selectedType == 'week'" [ngModel]="data" (ngModelChange)="refreshDateRange($event)"></nz-week-picker>
+      <nz-month-picker *ngIf="selectedType == 'month'" nzFormat="yyyy-MM" [ngModel]="data" (ngModelChange)="refreshDateRange($event)"></nz-month-picker>
+      <nz-month-picker *ngIf="selectedType == 'year'" nzFormat="yyyy" [ngModel]="data"  (ngModelChange)="refreshDateRange($event)"></nz-month-picker>
+  </div>
+</div>

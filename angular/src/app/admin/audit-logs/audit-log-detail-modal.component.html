@@ -1,0 +1,42 @@
+<form nz-form>
+    <sv-container col="2">
+        <sv-title>{{l("UserInformations")}}</sv-title>
+
+        <sv label="{{l('UserName')}}">{{auditLog.userName}}</sv>
+        <sv label="{{l('IpAddress')}}">{{auditLog.clientIpAddress}}</sv>
+        <sv label="{{l('Client')}}">{{auditLog.clientName}}</sv>
+        <sv label="{{l('Browser')}}" [col]="1">{{auditLog.browserInfo}}</sv>
+        <sv *ngIf="auditLog.impersonatorUserId" label="">{{l("AuditLogImpersonatedOperationInfo")}}</sv>
+
+    </sv-container>
+
+    <nz-divider></nz-divider>
+
+    <sv-container>
+        <sv-title>{{l("CustomData")}}</sv-title>
+        <sv *ngIf="auditLog.customData" label="{{l('None')}}" col="1">{{auditLog.customData}}</sv>
+    </sv-container>
+
+    <nz-divider></nz-divider>
+
+    <sv-container col="2">
+        <sv-title>{{l("ActionInformations")}}</sv-title>
+        <sv label="{{l('Service')}}">{{auditLog.serviceName}}</sv>
+        <sv label="{{l('Action')}}">{{auditLog.methodName}}</sv>
+        <sv label="{{l('Time')}}">{{getExecutionTime()}}</sv>
+        <sv label="{{l('Duration')}}">{{getDurationAsMs()}}</sv>
+        <sv *ngIf="!auditLog.exception" type="success" label="{{l('ErrorState')}}">
+            <div>
+                <i class="anticon anticon-check-circle"></i>{{l("Success")}}
+            </div>
+        </sv>
+        <sv *ngIf="auditLog.exception" label="{{l('ErrorState')}}" type="danger" col="1">
+            <pre>{{auditLog.exception}}</pre>
+        </sv>
+    </sv-container>
+
+    <div class="modal-footer">
+        <button nz-button [nzType]="'default'" type="button" (click)="close()">{{l("Close")}}
+        </button>
+    </div>
+</form>

@@ -1,0 +1,41 @@
+<nz-spin [nzSpinning]="saving">
+    <form nz-form #mySettingsModalForm="ngForm" (ngSubmit)="save()" *ngIf="user" nzLayout="vertical" se-container="1">
+
+        <se label="{{l('UserName')}} *">
+            <input nz-input #userNameInput="ngModel" type="text" [disabled]="!canChangeUserName"
+                   [(ngModel)]="user.userName" name="UserName" required maxlength="32">
+            <span class="m-form__help" *ngIf="!canChangeUserName">{{l("CanNotChangeAdminUserName")}}</span>
+            <validation-messages [formCtrl]="userNameInput"></validation-messages>
+        </se>
+
+        <se label="{{l('Name')}} *">
+            <input nz-input #nameInput="ngModel" type="text" name="Name" [(ngModel)]="user.name" required maxlength="32">
+            <validation-messages [formCtrl]="nameInput"></validation-messages>
+        </se>
+
+        <se label="{{l('EmailAddress')}} *">
+            <input nz-input #emailAddressInput="ngModel" type="email" name="EmailAddress"
+                   [(ngModel)]="user.emailAddress" required email maxlength="256">
+            <validation-messages [formCtrl]="emailAddressInput"></validation-messages>
+        </se>
+
+        <se label="{{l('PhoneNumber')}}">
+            <input nz-input type="text" name="PhoneNumber" [(ngModel)]="user.phoneNumber" maxlength="24">
+        </se>
+
+        <se label="{{l('Timezone')}}" *ngIf="showTimezoneSelection">
+            <timezone-combo [(selectedTimeZone)]="user.timezone" defaultTimezoneScope="{{defaultTimezoneScope}}"></timezone-combo>
+        </se>
+
+        <div class="modal-footer">
+            <button nz-button type="button" (click)="close()" [disabled]="saving">
+                {{l("Cancel")}}
+            </button>
+            <button nz-button type="submit" [nzType]="'primary'" [disabled]="!mySettingsModalForm.form.valid || saving">
+                <i class="anticon anticon-save"></i> <span>{{l("Save")}}</span>
+            </button>
+        </div>
+    </form>
+</nz-spin>
+
+

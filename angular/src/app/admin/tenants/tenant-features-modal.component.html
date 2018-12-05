@@ -1,0 +1,19 @@
+<form nz-form #modalForm="ngForm" (ngSubmit)="save()">
+    <feature-tree #featureTree></feature-tree>
+
+    <div class="modal-footer">
+        <button nz-button type="button" [disabled]="saving" [nzLoading]="saving"
+                (click)="resetFeatures()" nz-tooltip [nzTitle]="l('ResetFeaturesTooltip')">
+            <span>{{l("ResetSpecialFeatures")}}</span>
+        </button>
+        <button nz-button type="button" [disabled]="saving || resettingFeatures"
+                (click)="close()">
+            {{l("Cancel")}}
+        </button>
+        <button nz-button type="submit" [disabled]="resettingFeatures" [nzLoading]="saving"
+                [nzType]="'primary'">
+            <i class="anticon anticon-save"></i> <span>{{l("Save")}}</span>
+        </button>
+    </div>
+</form>
+

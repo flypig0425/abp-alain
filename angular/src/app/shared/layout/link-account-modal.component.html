@@ -1,0 +1,43 @@
+<form nz-form #linkAccountForm="ngForm" novalidate (ngSubmit)="save()">
+    <nz-form-item>
+        <nz-form-label>{{l("TenancyName")}}</nz-form-label>
+        <nz-form-item>
+            <input nz-input #tenancyNameInput="ngModel" type="text" name="TenancyName"
+                   [ngClass]="{'edited': linkUser.tenancyName}" [(ngModel)]="linkUser.tenancyName"
+                   maxlength="64">
+        </nz-form-item>
+    </nz-form-item>
+
+    <nz-form-item>
+        <nz-form-label>{{l("UserName")}} *</nz-form-label>
+        <nz-form-control>
+            <input nz-input #usernameOrEmailAddressInput="ngModel" type="text" name="UserName"
+                   [ngClass]="{'edited': linkUser.usernameOrEmailAddress}"
+                   [(ngModel)]="linkUser.usernameOrEmailAddress" required maxlength="256">
+            <validation-messages [formCtrl]="usernameOrEmailAddressInput"></validation-messages>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+        <nz-form-label>{{l("Password")}} *</nz-form-label>
+        <nz-form-control>
+            <input nz-input #passwordInput="ngModel" type="password" [ngClass]="{'edited': linkUser.password}"
+                   name="Password" [(ngModel)]="linkUser.password" required
+                   maxlength="128">
+            <validation-messages [formCtrl]="passwordInput"></validation-messages>
+        </nz-form-control>
+    </nz-form-item>
+
+    <div class="modal-footer">
+        <button nz-button [disabled]="saving" type="button" (click)="close()">
+            {{l("Cancel")}}
+        </button>
+        <button nz-button [nzType]="'primary'" type="submit" [disabled]="!linkAccountForm.form.valid"
+                [nzLoading]="saving">
+            <i class="action action-save"></i>
+            <span>{{l("Save")}}</span>
+        </button>
+    </div>
+</form>
+
+

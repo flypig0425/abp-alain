@@ -1,0 +1,18 @@
+
+<form #smsVerificationModalForm="ngForm" (ngSubmit)="save()">
+    <nz-form-item>
+        <nz-form-label>{{l("YourCode")}} *</nz-form-label>
+        <input nz-input #codeInput="ngModel" autoFocus type="text" name="Code"
+               [(ngModel)]="verifyCode.code" required maxlength="6" minlength="6">
+        <validation-messages [formCtrl]="codeInput"></validation-messages>
+    </nz-form-item>
+
+    <div class="modal-footer">
+        <button nz-button type="submit" [nzType]="'primary'" [disabled]="!smsVerificationModalForm.form.valid || saving">
+            <i class="anticon anticon-save"></i> <span>{{l("Verify")}}</span>
+        </button>
+    </div>
+</form>
+
+
+

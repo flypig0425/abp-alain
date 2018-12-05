@@ -1,0 +1,26 @@
+<nz-dropdown nzPlacement="bottomRight">
+    <div class="alain-default__nav-item d-flex align-items-center px-sm" nz-dropdown>
+        <nz-avatar [nzSrc]="'/assets/images/user.png'" nzSize="small" class="mr-sm"></nz-avatar>
+        {{shownLoginName}}
+    </div>
+    <div nz-menu class="width-sm">
+        <div nz-menu-item *ngIf="isImpersonatedLogin" (click)="backToMyAccount()">
+            <i *ngIf="isImpersonatedLogin" class="anticon anticon-rollback mr-sm"></i>
+            <span>{{l("BackToMyAccount")}}</span>
+        </div>
+        <div nz-menu-item (click)="changePassword()">
+            <i class="anticon anticon-ellipsis mr-sm"></i>
+            {{l("ChangePassword")}}
+        </div>
+        <div nz-menu-item (click)="showLinkedAccounts()">
+            <i class="anticon anticon-user mr-sm"></i>{{l("ManageLinkedAccounts")}}
+        </div>
+        <div nz-menu-item [nzDisabled]="true"><i class="anticon anticon-user mr-sm"></i>{{l("PersonalCenter")}}</div>
+        <div nz-menu-item (click)="changeMySettings()"><i class="anticon anticon-profile mr-sm"></i>{{l("MySettings")}}</div>
+        <div nz-menu-item (click)="showLoginAttempts()">
+            <i class="anticon anticon-bars mr-sm"></i>{{l("LoginAttempts")}}
+        </div>
+        <li nz-menu-divider></li>
+        <div nz-menu-item (click)="logout()"><i class="anticon anticon-logout mr-sm"></i>{{l('Logout')}}</div>
+    </div>
+</nz-dropdown>

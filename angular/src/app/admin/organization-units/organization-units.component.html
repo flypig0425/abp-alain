@@ -1,0 +1,16 @@
+<div [@routerTransition]>
+    <page-header title="{{l('OrganizationUnits')}}" autoBreadcrumb="false">
+        {{l("OrganizationUnitsHeaderInfo")}}
+    </page-header>
+
+    <nz-card [nzBordered]="false">
+        <nz-row [nzGutter]="24">
+            <nz-col [nzSpan]="12">
+                <organization-tree #ouTree (ouSelected)="ouMembers.organizationUnit = $event"></organization-tree>
+            </nz-col>
+            <nz-col [nzSpan]="12">
+                <organization-unit-members #ouMembers></organization-unit-members>
+            </nz-col>
+        </nz-row>
+    </nz-card>
+</div>

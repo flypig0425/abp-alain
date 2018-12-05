@@ -1,0 +1,48 @@
+<div>
+    <form nz-form novalidate (ngSubmit)="refresh()" autocomplete="off">
+        <nz-form-item *ngIf="options.isFilterEnabled">
+            <nz-form-control>
+                <nz-input-group nzSearch nzSize="large" [nzSuffix]="suffixButton">
+                    <input type="text" nz-input autoFocus name="filterText" [(ngModel)]="filterText"
+                           placeholder="{{l('SearchWithThreeDot')}}">
+                </nz-input-group>
+                <ng-template #suffixButton>
+                    <button nz-button nzType="primary" nzSize="large" nzSearch (click)="refresh()" type="submit">
+                        {{l('Search')}}
+                    </button>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+
+    <nz-table #nzTable [nzFrontPagination]="false" [nzData]="dataItems" [nzTotal]="totalItems"
+              [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
+              [nzLoading]="isTableLoading" [nzBordered]="true" [nzShowSizeChanger]="true"
+              (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+        <thead>
+        <tr>
+            <th nzWidth="130px" [style]="{'text-align':'center'}">{{l('Select')}}</th>
+            <th>{{ l('Name')}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of nzTable.data">
+            <td>
+                <button nz-button [nzType]="'primary'"
+                        (click)="selectItem(item)" >
+                    <i class="anticon anticon-select"></i>
+                    {{l('Select')}}
+                </button>
+            </td>
+            <td>{{item.name}}</td>
+        </tr>
+    </nz-table>
+
+    <div class="modal-footer">
+        <button nz-button [nzType]="'primary'" type="button" (click)="close()">{{l("Cancel")}}</button>
+    </div>
+
+</div>
+
+
+

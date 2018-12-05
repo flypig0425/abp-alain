@@ -1,0 +1,54 @@
+<div [@routerTransition] (window:resize)="onResize($event)">
+    <page-header [autoBreadcrumb]="false" title="{{l('Maintenance')}}"></page-header>
+
+    <nz-card [nzBordered]="false">
+        <nz-tabset>
+            <nz-tab nzTitle=" {{l('Caches')}}" nzBordered="false">
+                <nz-card [nzTitle]="l('CachesHeaderInfo')" [nzExtra]="extra">
+                    <ng-template #extra>
+                        <button nz-button nzType="primary" (click)="clearAllCaches()">
+                            <i class="acticon acticon-delete"> {{l("ClearAll")}}</i>
+                        </button>
+                    </ng-template>
+
+                    <nz-table [nzData]="caches" [nzPageSize]="20" nzShowPagination="false" nzBordered>
+                        <tbody>
+                        <tr *ngFor="let cache of caches">
+                            <td>
+                                <span>{{cache.name}}</span>
+                                <button nz-button nzType="primary" class="float-right" (click)="clearCache(cache.name)">
+                                    {{l("Clear")}}
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </nz-table>
+                </nz-card>
+            </nz-tab>
+            <nz-tab nzTitle="{{l('WebSiteLogs')}}">
+                <nz-card [nzTitle]="l('WebSiteLogsHeaderInfo')" [nzExtra]="extra1" nzBordered="false">
+                    <ng-template #extra1>
+                        <button nz-button nzType="default" (click)="downloadWebLogs()"><i
+                            class="acticon acticon-download"></i>
+                            {{l("DownloadAll")}}
+                        </button>
+                        <button nz-button nzType="primary" (click)="getWebLogs()"><i
+                            class="acticon acticon-refresh"></i>
+                            {{l("Refresh")}}
+                        </button>
+                    </ng-template>
+
+                    <div class="web-log-view full-height">
+                        <span class="log-line" *ngFor="let log of logs">
+                            <span [class]="getLogClass(log)">{{getLogType(log)}}</span>
+                            {{getRawLogContent(log)}}
+                        </span>
+                    </div>
+
+                </nz-card>
+
+            </nz-tab>
+        </nz-tabset>
+    </nz-card>
+
+</div>

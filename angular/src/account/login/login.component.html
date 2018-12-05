@@ -1,0 +1,52 @@
+<div [@routerTransition]>
+
+    <nz-spin [nzSize]="'large'" [nzSpinning]="submitting">
+        <form nz-form #loginForm="ngForm" method="post" (ngSubmit)="login()" se-container="1">
+
+            <se>
+                <nz-input-group nzSize="large" nzPrefixIcon="anticon anticon-user">
+                    <input nz-input #userNameOrEmailAddressInput="ngModel"
+                           [(ngModel)]="loginService.authenticateModel.userNameOrEmailAddress" autocomplete="off"
+                           placeholder="{{l('UserNameOrEmail')}} *" name="userNameOrEmailAddress" required minlength="5"
+                           [nzSize]="'large'" maxlength="255">
+                    <validation-messages [formCtrl]="userNameOrEmailAddressInput"></validation-messages>
+                </nz-input-group>
+            </se>
+
+            <se>
+                <nz-input-group nzSize="large" nzPrefixIcon="anticon anticon-lock">
+                    <input nz-input #passwordInput="ngModel" [(ngModel)]="loginService.authenticateModel.password"
+                           type="password" autocomplete="off"
+                           placeholder="{{l('Password')}} *" name="password" required maxlength="32">
+                    <validation-messages [formCtrl]="passwordInput"></validation-messages>
+                </nz-input-group>
+            </se>
+
+            <se>
+                <div nz-col [nzSpan]="12">
+                    <label nz-checkbox [(ngModel)]="loginService.rememberMe" name="rememberMe" value="true">
+                        {{l("RememberMe")}}
+                    </label>
+                </div>
+
+                <div nz-col [nzSpan]="12" class="text-right">
+                    <a routerLink="/account/forgot-password" id="forget-password" class="m-link forget-password">
+                        {{l("ForgotPassword")}}
+                    </a>
+                </div>
+            </se>
+
+            <se>
+                <button nz-button [nzType]="'primary'" [nzLoading]="submitting" [nzSize]="'large'"
+                        [disabled]="!loginForm.form.valid" nzBlock>
+                    {{l("LogIn")}}
+                </button>
+            </se>
+        </form>
+        <div class="other">
+            <a *ngIf="isSelfRegistrationAllowed" class="register"
+               routerLink="/account/register">{{l("CreateAnAccount")}} </a>
+        </div>
+    </nz-spin>
+
+</div>

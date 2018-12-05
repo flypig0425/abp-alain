@@ -1,0 +1,91 @@
+<div [@routerTransition]>
+
+    <page-header title="{{l('Roles')}}" [autoBreadcrumb]="false" [action]="action">
+        {{l("RolesHeaderInfo")}}
+
+        <ng-template #action>
+            <button nz-button *ngIf="isGranted('Pages.Administration.Roles.Create')" (click)="createRole()"
+                    [nzType]="'primary'">
+                <i class="anticon anticon-plus"></i>{{l("CreateNewRole")}}
+            </button>
+        </ng-template>
+    </page-header>
+
+    <form nz-form class="search-form">
+        <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="12" >
+                <nz-form-item style="margin-bottom: 0px;">
+                    <nz-form-control>
+                        <permission-combo [(selectedPermission)]="selectedPermission"></permission-combo>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+            <div nz-col [nzSpan]="12" [class.text-right]="'true'">
+                <button nz-button [nzType]="'primary'" (click)="queryRefresh()">
+                    <i class="anticon anticon-reload"></i> {{l('Refresh')}}
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <nz-table #nzTable [nzData]="dataItems" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber"
+              [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading"
+              [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+        <thead>
+        <tr>
+            <th>
+                {{l('RoleName')}}
+            </th>
+            <th>
+                {{l('CreationTime')}}
+            </th>
+            <th nzWidth="130px" nzRight="0px" style="text-align: center">
+                {{l("Actions")}}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of nzTable.data">
+            <td>
+                {{item.displayName}}
+                <nz-tooltip [nzTitle]="l('StaticRole_Tooltip')" [nzPlacement]="'top'">
+                    <nz-tag nz-tooltip *ngIf="item.isStatic" [nzColor]="'#108ee9'">{{l('Static')}}</nz-tag>
+                </nz-tooltip>
+
+                <nz-tooltip [nzTitle]="l('DefaultRole_Description')" [nzPlacement]="'top'">
+                    <nz-tag nz-tooltip *ngIf="item.isDefault" [nzColor]="'#2db7f5'">{{l('Default')}}</nz-tag>
+                </nz-tooltip>
+
+            </td>
+            <td>{{item.creationTime | momentFormat:'L'}}</td>
+            <td nzRight="0px">
+                <nz-dropdown [nzTrigger]="'click'">
+                    <a nz-dropdown>
+                        <button nz-button [nzType]="'primary'">
+                            <i class="anticon anticon-setting"></i>
+                            {{"Actions"}}
+                            <i class="anticon anticon-down"></i>
+                        </button>
+                    </a>
+                    <ul nz-menu>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Administration.Roles.Edit')"
+                               (click)="editRole(item.id)">
+                                {{l('Edit')}}
+                            </a>
+                        </li>
+                        <li nz-menu-item>
+                            <a *ngIf="!item.isStatic && permission.isGranted('Pages.Administration.Roles.Delete')"
+                               (click)="deleteRole(item)">
+                                {{l('Delete')}}
+                            </a>
+                        </li>
+                    </ul>
+                </nz-dropdown>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+
+</div>

@@ -1,0 +1,126 @@
+<div [@routerTransition]>
+    <page-header [autoBreadcrumb]="false" title="{{l('TenantsHeaderInfo')}}" [action]="action">
+        <ng-template #action>
+            <button nz-button ng-if="isGranted('Pages.Tenants.Create')" [nzType]="'primary'" (click)="createTenant()">
+                <i class="anticon anticon-plus"></i>{{l("CreateNewTenant")}}
+            </button>
+        </ng-template>
+    </page-header>
+
+    <form nz-form (submit)="refresh()" class="search-form" autocomplete="off">
+        <div nz-row [nzGutter]="24">
+            <nz-col nzLg="12" nzMd="12" nzSm="24">
+                <nz-form-item>
+                    <nz-form-label>{{l('TenantNameOrTenancyCode')}}</nz-form-label>
+                    <nz-form-control>
+                        <nz-input-group nzSearch [nzSuffix]="suffix" style="width: 100%">
+                            <input type="text" nz-input name="filterText" [(ngModel)]="filters.filterText"
+                                   placeholder="{{l('SearchWithThreeDot')}}">
+
+                            <ng-template #suffix>
+                                <button nz-button nzType="primary" nzSearch (click)="refresh()" type="submit">
+                                    {{l('Search')}}
+                                </button>
+                            </ng-template>
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+
+            <nz-col nzLg="12" [nzMd]="12" [nzSm]="24">
+                <nz-form-item>
+                    <nz-form-label>{{l('Edition')}}</nz-form-label>
+                    <nz-form-control>
+                        <edition-combo [(selectedEdition)]="filters.selectedEditionId"></edition-combo>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+
+        </div>
+
+        <div nz-row class="text-right mb-md">
+            <button nz-button [nzType]="'primary'" type="button" (click)="refresh()">
+                <i class="anticon anticon-reload"> </i> {{l('Refresh')}}
+            </button>
+        </div>
+    </form>
+
+    <nz-table #nzTable [nzFrontPagination]="false" [nzData]="dataItems" [nzTotal]="totalItems"
+              [(nzPageIndex)]="pageNumber"
+              [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" [nzBordered]="true"
+              [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+        <thead (nzSortChange)="sort($event)" nzSingleSort>
+        <tr>
+
+            <th nzShowSort nzSortKey="tenancyName">{{l('TenancyCodeName')}}</th>
+            <th nzShowSort nzSortKey="name">{{l('Name')}}</th>
+            <th nzShowSort nzSortKey="editionDisplayName">{{l('Edition')}}</th>
+            <th nzShowSort nzSortKey="subscriptionEndDateUtc">{{l('SubscriptionEndDateUtc')}}</th>
+            <th nzShowSort nzSortKey="isActive">{{l('Active')}}</th>
+            <th nzShowSort nzSortKey="creationTime">{{l('CreationTime')}}</th>
+            <th nzWidth="130px" nzRight="0px" style="text-align: center">
+                <span>{{l('Actions')}}</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of nzTable.data">
+
+            <td>
+                <i *ngIf="item.connectionString" class="anticon anticon-database"
+                   title="{{l('HasOwnDatabase')}}"></i>
+                {{item.tenancyName}}
+            </td>
+            <td>{{item.name}}</td>
+            <td>{{item.editionDisplayName}}</td>
+            <td>
+                {{ item.subscriptionEndDateUtc ? (item.subscriptionEndDateUtc | momentFormat:'L') : '-'}}
+            </td>
+            <td>
+                <span *ngIf="item.isActive" class="label label-success">{{l('Yes')}}</span>
+                <span *ngIf="!item.isActive" class="label label-default">{{l('No')}}</span>
+            </td>
+            <td>
+                {{item.creationTime | momentFormat:'L'}}
+            </td>
+
+            <td nzRight="0px">
+                <nz-dropdown [nzTrigger]="'click'">
+                    <a nz-dropdown>
+                        <button nz-button [nzType]="'primary'">
+                            <i class="anticon anticon-setting"></i>
+                            {{l("Actions")}}
+                            <i class="anticon anticon-down"></i>
+                        </button>
+                    </a>
+                    <ul nz-menu>
+                        <li [class.disabled]="!item.isActive" nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Tenants.Impersonation')"
+                               (click)="item.isActive && showUserImpersonateLookUpModal(item)">{{l('LoginAsThisTenant')}}</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Tenants.Edit')"
+                               (click)="editTenant(item.id, item.name)">{{l('Edit')}}</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Tenants.ChangeFeatures')"
+                               (click)="showTenantFeature(item.id, item.name)">{{l('Features')}}</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Tenants.Delete')"
+                               (click)="delete (item)">{{l('Delete')}}</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a (click)="unlockUser(item)">{{l('Unlock')}}</a>
+                        </li>
+                    </ul>
+                </nz-dropdown>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>
+
+
+
+

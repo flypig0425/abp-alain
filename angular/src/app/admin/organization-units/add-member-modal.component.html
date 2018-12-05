@@ -1,0 +1,41 @@
+<form nz-form #memberForm="ngForm" (ngSubmit)="addUsersToOrganizationUnit()">
+    <nz-form-item>
+        <nz-form-control>
+            <nz-input-group nzSearch [nzSuffix]="suffixButton">
+                <input type="text" nz-input autoFocus name="filterText" [(ngModel)]="filterText" placeholder="{{l('SearchWithThreeDot')}}">
+
+                <ng-template #suffixButton>
+                    <button nz-button nzType="primary" nzSearch (click)="refresh()" type="button">{{l('Search')}}</button>
+                </ng-template>
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-table #nzTable [nzFrontPagination]="false" [nzData]="dataItems" [nzTotal]="totalItems"
+              [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
+              [nzLoading]="isTableLoading" [nzBordered]="true" [nzShowSizeChanger]="true"
+              (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+        <thead>
+        <tr>
+            <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+            <th>{{ l('Name')}}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let item of nzTable.data">
+            <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled" (nzCheckedChange)="refreshStatus($event)"></td>
+            <td>{{item.name}}</td>
+        </tr>
+        </tbody>
+    </nz-table>
+
+    <div class="modal-footer">
+        <button nz-button [disabled]="saving" [nzType]="'default'" type="button" (click)="close()">{{l("Cancel")}}
+        </button>
+        <button nz-button [disabled]="saved" [nzType]="'primary'" type="submit" [nzLoading]="saving">
+            <i class="anticon anticon-save"></i>
+            <span>{{l("Save")}}</span>
+        </button>
+    </div>
+</form>

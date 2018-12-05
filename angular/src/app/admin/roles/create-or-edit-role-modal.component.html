@@ -1,0 +1,35 @@
+<form nz-form #roleForm="ngForm" (ngSubmit)="save()">
+    <nz-tabset>
+        <nz-tab nzTitle="{{l('RoleName')}}">
+
+            <nz-form-item>
+                <nz-form-label>{{l("RoleName")}}</nz-form-label>
+                <nz-form-control>
+                    <input nz-input type="text" [(ngModel)]="role.displayName" name="DisplayName" minlength="1"
+                           maxlength="64"
+                           required/>
+                </nz-form-control>
+            </nz-form-item>
+
+            <label nz-checkbox [(ngModel)]="role.isDefault" name="IsDefault">{{l("Default")}}</label>
+            <br>
+            <span class="help-block">{{l("DefaultRole_Description")}}</span>
+
+        </nz-tab>
+        <nz-tab nzTitle="{{l('Permissions')}}">
+            <permission-tree #permissionTree></permission-tree>
+        </nz-tab>
+    </nz-tabset>
+
+    <nz-alert nzType="warning" nzMessage="{{l('Note_RefreshPageForPermissionChanges')}}" style="font-style: italic"></nz-alert>
+
+    <div class="modal-footer">
+        <button nz-button [disabled]="saving" [nzType]="'default'" type="button" (click)="close()">{{l("Cancel")}}
+        </button>
+        <button nz-button [nzType]="'primary'" type="submit" [disabled]="!roleForm.form.valid"
+                [nzLoading]="saving">
+            <i class="anticon anticon-save"></i>
+            <span>{{l("Save")}}</span>
+        </button>
+    </div>
+</form>

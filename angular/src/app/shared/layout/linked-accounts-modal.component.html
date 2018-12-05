@@ -1,0 +1,49 @@
+<div>
+    <nz-card [nzExtra]="extra">
+        <ng-template #extra>
+            <button nz-button [nzType]="'primary'" (click)="manageLinkedAccounts()"><i class="anticon anticon-plus"></i>{{l("LinkNewAccount")}}
+            </button>
+        </ng-template>
+
+        <nz-table #nzTable [nzFrontPagination]="false" [nzData]="dataItems" [nzTotal]="totalItems"
+                  [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
+                  [nzLoading]="isTableLoading" [nzBordered]="true" [nzShowSizeChanger]="true"
+                  (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+            <thead>
+            <tr>
+                <th nzWidth="130px" style="text-align: center">
+                    {{l("Actions")}}
+                </th>
+
+                <th nzShowSort nzSortKey="userName">{{l('UserName')}}</th>
+
+                <th nzWidth="60px" style="text-align: center">
+                    {{l('Delete')}}
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of nzTable.data">
+                <td>
+                    <button nz-button [nzType]="'primary'" (click)="switchToUser(item)">
+                        <i class="anticon anticon-login"></i>{{l('LogIn')}}
+                    </button>
+                </td>
+
+                <td> {{getShownLinkedUserName(item)}}</td>
+
+                <td style="text-align: center">
+                    <button nz-button [nzType]="'danger'"(click)="delete(item)">
+                        <i class="anticon anticon-delete"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+    </nz-card>
+
+    <div class="modal-footer">
+        <button nz-button type="button" (click)="close()">{{l("Close")}}</button>
+    </div>
+</div>
+

@@ -1,0 +1,45 @@
+<form nz-form #roleForm="ngForm" novalidate (ngSubmit)="save()">
+
+    <nz-tabset>
+        <nz-tab nzTitle="{{l('EditionProperties')}}">
+            <nz-form-item>
+                <nz-form-label>{{l("EditionName")}} *</nz-form-label>
+                <nz-form-control>
+                    <input nz-input #editionNameInput="ngModel" type="text"
+                           name="EditionDisplayName" [ngClass]="{'edited':edition.displayName}"
+                           [(ngModel)]="edition.displayName" required maxlength="64"/>
+                    <validation-messages [formCtrl]="editionNameInput"></validation-messages>
+                </nz-form-control>
+            </nz-form-item>
+
+            <!--<nz-form-item>-->
+                <!--<nz-form-label>{{l("SubscriptionPrice")}}</nz-form-label>-->
+                <!--<nz-form-control>-->
+                    <!--<nz-radio-group name="SubscriptionPrice" nzName="SubscriptionPrice" [(ngModel)]="isFree" (ngModelChange)="resetPrices($event)" >-->
+                        <!--<label nz-radio nzValue="true">{{l("Free")}}</label>-->
+                        <!--<label nz-radio nzValue="false">{{l("Paid")}}</label>-->
+                    <!--</nz-radio-group>-->
+                <!--</nz-form-control>-->
+            <!--</nz-form-item>-->
+
+        </nz-tab>
+
+        <nz-tab nzTitle="{{l('Features')}}">
+            <feature-tree #featureTree></feature-tree>
+        </nz-tab>
+    </nz-tabset>
+
+    <div class="modal-footer">
+        <button nz-button [disabled]="saving" type="button"  (click)="close()">
+            {{l("Cancel")}}
+        </button>
+        <button nz-button [nzType]="'primary'" type="submit"  [disabled]="!roleForm.form.valid"
+                [nzLoading]="saving">
+            <i class="acticon acticon-save"></i>
+            <span>{{l("Save")}}</span>
+        </button>
+    </div>
+
+</form>
+
+

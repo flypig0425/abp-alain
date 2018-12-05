@@ -1,0 +1,28 @@
+<div class="account_container">
+    <div class="wrap">
+        <div class="top">
+            <div class="head">
+                <img class="logo" src="/assets/logo.svg">
+                <span class="title">AbpZeroTemplate</span>
+            </div>
+            <div class="desc">AbpZeroTemplate</div>
+        </div>
+
+        <div class="content">
+            <div *ngIf="showTenantChange()" class="tenant-change">
+                <tenant-change></tenant-change>
+            </div>
+
+            <router-outlet></router-outlet>
+        </div>
+
+        <!--<language-switch></language-switch>-->
+
+        <global-footer [links]="links">
+            Copyright <i class="anticon anticon-copyright"></i> 2011 - 2018 United-Imaging.com
+            <br>
+            {{appSession.application.version}} [{{releaseDate}}]
+        </global-footer>
+    </div>
+
+</div>

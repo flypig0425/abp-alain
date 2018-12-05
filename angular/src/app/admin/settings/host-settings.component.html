@@ -1,0 +1,278 @@
+<div [@routerTransition]>
+    <page-header [autoBreadcrumb]="false" title="{{l('Settings')}}" [action]="action">
+        {{l("SettingsHeaderInfo")}}
+
+        <ng-template #action>
+            <button nz-button (click)="saveAll()" [nzType]="'primary'">
+                <i class="anticon anticon-save"></i> {{l("SaveAll")}}
+            </button>
+        </ng-template>
+    </page-header>
+
+    <nz-card [nzBordered]="false">
+        <nz-tabset [nzSize]="'large'" *ngIf="hostSettings">
+            <nz-tab [nzTitle]="l('TenantManagement')" *ngIf="hostSettings.tenantManagement">
+                <div nz-row>
+                    <h5>{{l("FormBasedRegistration")}}</h5>
+                </div>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-card-meta [nzTitle]="title1" [nzDescription]="l('AllowTenantsToRegisterThemselves_Hint')">
+                            <ng-template #title1>
+                                <label nz-checkbox [(ngModel)]="hostSettings.tenantManagement.allowSelfRegistration">
+                                    {{l("AllowTenantsToRegisterThemselves")}}
+                                </label>
+                            </ng-template>
+                        </nz-card-meta>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-card-meta [nzTitle]="title2"
+                                      [nzDescription]="l('NewRegisteredTenantsIsActiveByDefault_Hint')">
+                            <ng-template #title2>
+                                <label nz-checkbox name="IsNewRegisteredTenantActiveByDefault"
+                                       [(ngModel)]="hostSettings.tenantManagement.isNewRegisteredTenantActiveByDefault">
+                                    {{l("NewRegisteredTenantsIsActiveByDefault")}}
+                                </label>
+                            </ng-template>
+                        </nz-card-meta>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-card-meta [nzTitle]="title3">
+                            <ng-template #title3>
+                                <label nz-checkbox name="UseCaptchaOnRegistration"
+                                       [(ngModel)]="hostSettings.tenantManagement.useCaptchaOnRegistration">
+                                    {{l("UseCaptchaOnRegistration")}}
+                                </label>
+                            </ng-template>
+                        </nz-card-meta>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label> {{l("Edition")}}</nz-form-label>
+                    <nz-form-control>
+                        <nz-select style="width: 400px;"
+                                   [(ngModel)]="hostSettings.tenantManagement.defaultEditionId">
+                            <nz-option [nzValue]="">{{l("emptyText")}}</nz-option>
+                            <nz-option *ngFor="let edition of editions" [nzValue]="edition.value"
+                                       [nzLabel]="edition.displayText"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-tab>
+
+            <nz-tab [nzTitle]="l('UserManagement')" *ngIf="hostSettings.userManagement">
+                <nz-form-item>
+                    <nz-form-control>
+                        <label nz-checkbox
+                               [(ngModel)]="hostSettings.userManagement.isEmailConfirmationRequiredForLogin">
+                            {{l("EmailConfirmationRequiredForLogin")}}
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <label nz-checkbox [(ngModel)]="hostSettings.userManagement.smsVerificationEnabled">
+                            {{l("SmsVerificationEnabled")}}
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-tab>
+
+            <nz-tab [nzTitle]="l('Security')" *ngIf="hostSettings.security">
+                <div nz-row>
+                    {{l("PasswordComplexity")}}
+                </div>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <label nz-checkbox [(ngModel)]="hostSettings.security.useDefaultPasswordComplexitySettings">
+                            {{l("UseDefaultSettings")}}
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <label nz-checkbox [(ngModel)]="hostSettings.security.passwordComplexity.requireDigit"
+                               *ngIf="!hostSettings.security.useDefaultPasswordComplexitySettings">
+                            {{l("PasswordComplexity_RequireDigit")}}
+                        </label>
+
+                        <label nz-checkbox [(ngModel)]="hostSettings.security.defaultPasswordComplexity.requireDigit"
+                               *ngIf="hostSettings.security.useDefaultPasswordComplexitySettings" disabled>
+                            {{l("PasswordComplexity_RequireDigit")}}
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <label nz-checkbox [(ngModel)]="hostSettings.security.passwordComplexity.requireLowercase"
+                               *ngIf="!hostSettings.security.useDefaultPasswordComplexitySettings">
+                            {{l("PasswordComplexity_RequireLowercase")}}
+                        </label>
+
+                        <label nz-checkbox
+                               [(ngModel)]="hostSettings.security.defaultPasswordComplexity.requireLowercase"
+                               *ngIf="hostSettings.security.useDefaultPasswordComplexitySettings" disabled>
+                            {{l("PasswordComplexity_RequireLowercase")}}
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <label nz-checkbox [(ngModel)]="hostSettings.security.passwordComplexity.requireNonAlphanumeric"
+                               *ngIf="!hostSettings.security.useDefaultPasswordComplexitySettings">
+                            {{l("PasswordComplexity_RequireNonAlphanumeric")}}
+                        </label>
+                        <label nz-checkbox
+                               [(ngModel)]="hostSettings.security.defaultPasswordComplexity.requireNonAlphanumeric"
+                               *ngIf="hostSettings.security.useDefaultPasswordComplexitySettings"
+                               disabled>
+                            {{l("PasswordComplexity_RequireNonAlphanumeric")}}
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <label nz-checkbox [(ngModel)]="hostSettings.security.passwordComplexity.requireUppercase"
+                               *ngIf="!hostSettings.security.useDefaultPasswordComplexitySettings">
+                            {{l("PasswordComplexity_RequireUppercase")}}
+                        </label>
+
+                        <label nz-checkbox
+                               [(ngModel)]="hostSettings.security.defaultPasswordComplexity.requireUppercase"
+                               *ngIf="hostSettings.security.useDefaultPasswordComplexitySettings"
+                               disabled>
+                            {{l("PasswordComplexity_RequireUppercase")}}
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label>{{l("PasswordComplexity_RequiredLength")}}</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="number" name="RequiredLength"
+                               [ngClass]="{'edited':hostSettings.security.passwordComplexity.requiredLength}"
+                               [(ngModel)]="hostSettings.security.passwordComplexity.requiredLength"
+                               *ngIf="!hostSettings.security.useDefaultPasswordComplexitySettings">
+                        <input nz-input type="number" name="RequiredLength"
+                               [ngClass]="{'edited':hostSettings.security.defaultPasswordComplexity.requiredLength}"
+                               [(ngModel)]="hostSettings.security.defaultPasswordComplexity.requiredLength"
+                               *ngIf="hostSettings.security.useDefaultPasswordComplexitySettings"
+                               disabled>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-tab>
+
+            <nz-tab [nzTitle]="l('EmailSmtp')" *ngIf="hostSettings.email">
+                <nz-form-item>
+                    <nz-form-label>{{l("DefaultFromAddress")}}</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="email" name="DefaultFromAddress"
+                               [ngClass]="{'edited':hostSettings.email.defaultFromAddress}"
+                               [(ngModel)]="hostSettings.email.defaultFromAddress" maxlength="256">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label>{{l("DefaultFromDisplayName")}}</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="text" name="DefaultFromDisplayName"
+                               [ngClass]="{'edited':hostSettings.email.defaultFromDisplayName}"
+                               [(ngModel)]="hostSettings.email.defaultFromDisplayName" maxlength="128">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label>{{l("SmtpHost")}}</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="text" name="SmtpHost"
+                               [ngClass]="{'edited':hostSettings.email.smtpHost}"
+                               [(ngModel)]="hostSettings.email.smtpHost"
+                               maxlength="64">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label>{{l("SmtpPort")}}</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="number" name="SmtpPort"
+                               [ngClass]="{'edited':hostSettings.email.smtpPort}"
+                               [(ngModel)]="hostSettings.email.smtpPort"
+                               maxlength="5">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <label nz-checkbox [(ngModel)]="hostSettings.email.smtpEnableSsl">
+                            {{l("UseSsl")}}
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control>
+                        <label nz-checkbox [(ngModel)]="hostSettings.email.smtpUseDefaultCredentials">
+                            {{l("UseDefaultCredentials")}}
+                        </label>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item [hidden]="hostSettings.email.smtpUseDefaultCredentials">
+                    <nz-form-label>{{l("DomainName")}}</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="text" name="SmtpDomainName"
+                               [ngClass]="{'edited':hostSettings.email.smtpDomain}"
+                               [(ngModel)]="hostSettings.email.smtpDomain" maxlength="128">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item [hidden]="hostSettings.email.smtpUseDefaultCredentials">
+                    <nz-form-label>{{l("UserName")}}</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="text" name="SmtpUserName"
+                               [ngClass]="{'edited':hostSettings.email.smtpUserName}"
+                               [(ngModel)]="hostSettings.email.smtpUserName" maxlength="128">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item [hidden]="hostSettings.email.smtpUseDefaultCredentials">
+                    <nz-form-label>{{l("Password")}}</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="password" name="SmtpPassword"
+                               [ngClass]="{'edited':hostSettings.email.smtpPassword}"
+                               [(ngModel)]="hostSettings.email.smtpPassword"
+                               maxlength="128">
+                    </nz-form-control>
+                </nz-form-item>
+
+                <hr/>
+                <h5>{{l("TestEmailSettingsHeader")}}</h5>
+
+                <div nz-row nzGutter="24">
+                    <div nz-col [nzSpan]="8">
+                        <input nz-input type="text" class="form-control input-mini" [(ngModel)]="testEmailAddress">
+                    </div>
+                    <div nz-col [nzSpan]="4">
+                        <button nz-button [nzType]="'primary'" type="button" (click)="sendTestEmail()">
+                            {{l("SendTestEmail")}}
+                        </button>
+                    </div>
+                </div>
+            </nz-tab>
+        </nz-tabset>
+    </nz-card>
+</div>

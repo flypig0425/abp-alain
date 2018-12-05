@@ -1,0 +1,81 @@
+<div [@routerTransition]>
+    <page-header [autoBreadcrumb]="false" title="{{l('AuditLogs')}}" [action]="action">
+        <ng-template #action>
+            <button nz-button type="button" [nzType]="'primary'" (click)="exportToExcel()">
+                <i class="anticon anticon-file-excel"></i> {{l("ExportToExcel")}}
+            </button>
+
+            <button nz-button type="button" [nzType]="'primary'" (click)="queryRefresh()">
+                <i class="anticon anticon-reload"></i> {{l("Refresh")}}
+            </button>
+        </ng-template>
+    </page-header>
+
+    <form nz-form [nzLayout]="'inline'" class="search__form search-form" (ngSubmit)="refresh()">
+        <nz-row [nzGutter]="24">
+            <nz-col nzMd="12" nzSm="24">
+                <nz-form-item>
+                    <nz-form-label>{{l("DateRange")}}</nz-form-label>
+                    <nz-form-control>
+                        <date-range-picker [(startDate)]="startDate" [(endDate)]="endDate"></date-range-picker>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+
+            <nz-col nzMd="12" nzSm="24">
+                <nz-form-item>
+                    <nz-form-label>{{l("UserName")}}</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input type="text" name="UserName" [(ngModel)]="username">
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+        </nz-row>
+    </form>
+
+    <nz-table #nzTable [nzFrontPagination]="false" [nzData]="dataItems" [nzTotal]="totalItems"
+              [(nzPageIndex)]="pageNumber"
+              [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" [nzBordered]="true"
+              [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+        <thead (nzSortChange)="sort($event)" nzSingleSort>
+        <tr>
+            <th nzWidth="75px"></th>
+            <th nzWidth="75px"></th>
+            <th nzShowSort nzSortKey="executionTime" nzWidth="150px">{{l('Time')}}</th>
+            <th nzShowSort nzSortKey="userName" nzWidth="150px">{{l('UserName')}}</th>
+            <th nzShowSort nzSortKey="serviceName" nzWidth="250px">{{l('Service')}}</th>
+            <th nzShowSort nzSortKey="methodName" nzWidth="250px">{{l('Action')}}</th>
+            <th nzShowSort nzSortKey="executionDuration" nzWidth="100px">{{l('Duration')}}</th>
+            <th nzShowSort nzSortKey="clientIpAddress" nzWidth="150px">{{l('IpAddress')}}</th>
+            <th nzShowSort nzSortKey="clientName" nzWidth="150px">{{l('Client')}}</th>
+            <th nzShowSort nzSortKey="browserInfo" nzWidth="150px">{{l('Browser')}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of nzTable.data">
+            <td style="text-align: center">
+                <button nz-button nzShape="circle" [nzSize]="'small'"
+                        (click)="showDetails(item)">
+                    <i class="anticon anticon-search"></i>
+                </button>
+            </td>
+            <td style="text-align: center">
+                <i *ngIf="item.exception" class="acticon acticon-warning m--font-warning"></i>
+                <i *ngIf="!item.exception" class="anticon anticon-check-circle m--font-success"></i>
+            </td>
+            <td>{{ item.executionTime | momentFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+            <td>{{ item.userName }}</td>
+            <td>{{ item.serviceName }}</td>
+            <td>{{ item.methodName }}</td>
+            <td>
+                {{l('Xms', item.executionDuration)}}
+            </td>
+            <td>{{ item.clientIpAddress }}</td>
+            <td>{{ item.clientName }}</td>
+            <td>
+                <span title="{{item.browserInfo}}">{{truncateStringWithPostfix(item.browserInfo, 20)}}</span>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+</div>

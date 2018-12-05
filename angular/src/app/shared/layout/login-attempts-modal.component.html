@@ -1,0 +1,34 @@
+<nz-card [nzBordered]="false">
+
+    <div nz-row *ngFor="let userLoginAttempt of userLoginAttempts">
+        <nz-card [nzBordered]="true" >
+
+            <sv-container col="1">
+                <sv label="Login State:">
+                    <nz-badge *ngIf="userLoginAttempt.result == 'Success'" nzStatus="success" nzText="{{l('Success')}}" ></nz-badge>
+                    <nz-badge *ngIf="!(userLoginAttempt.result == 'Success')" nzStatus="error" nzText="{{l('Failed')}}"></nz-badge>
+                </sv>
+
+                <sv label="{{l('IpAddress')}}:">
+                    {{userLoginAttempt.clientIpAddress}}
+                </sv>
+
+                <sv label="{{l('Client')}}:">
+                    {{userLoginAttempt.clientName}}
+                </sv>
+
+                <sv label="{{l('Browser')}}:">
+                    {{userLoginAttempt.browserInfo}}
+                </sv>
+
+                <sv label="{{l('Time')}}:">
+                    {{getLoginAttemptTime(userLoginAttempt)}}
+                </sv>
+            </sv-container>
+
+        </nz-card>
+    </div>
+
+</nz-card>
+
+

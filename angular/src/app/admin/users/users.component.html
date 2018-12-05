@@ -1,0 +1,136 @@
+<div [@routerTransition]>
+
+    <page-header [autoBreadcrumb]="false" title="{{l('Users')}}" [action]="action">
+        <ng-template #action>
+            <button nz-button (click)="createOrUpdateUser()" *ngIf="isGranted('Pages.Administration.Users.Create')"
+                    [nzType]="'primary'">
+                <i class="anticon anticon-plus"></i><span>{{l('CreatingNewUser')}}</span>
+            </button>
+
+            <button nz-button (click)="exportToExcel()" [nzType]="'primary'">
+                <i class="anticon anticon-file-excel"></i> {{l("ExportToExcel")}}
+            </button>
+        </ng-template>
+    </page-header>
+
+    <form nz-form class="search-form">
+        <nz-row [nzGutter]="24">
+            <nz-col nzMd="12" nzSm="24">
+                <nz-form-item>
+                    <nz-form-control>
+                        <input nz-input [(ngModel)]="filterText" name="filterText" autoFocus
+                               [placeholder]="l('SearchWithThreeDot')"
+                               type="text">
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+
+            <!--如果使用*ngIf会导致每次展开的时候都会调用WebAPI去获取数据，这里使用hidden减少请求次数-->
+
+            <nz-col nzMd="12" nzSm="24" [hidden]="!(advancedFiltersAreShown && isGranted('Pages.Administration.Roles'))">
+                <nz-form-item>
+                    <nz-form-control>
+                        <permission-combo [(selectedPermission)]="selectedPermission"></permission-combo>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+
+            <nz-col nzMd="12" nzSm="24" [hidden]="!(advancedFiltersAreShown && isGranted('Pages.Administration.Roles'))">
+                <nz-form-item>
+                    <nz-form-control>
+                        <role-combo [(selectedRole)]="role"></role-combo>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+
+            <nz-col [nzMd]="advancedFiltersAreShown ? 24 : 12" nzSm="24" [class.text-right]="advancedFiltersAreShown">
+                <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="isTableLoading">{{l("Search")}}</button>
+                <button nz-button type="reset" (click)="refresh()" class="mx-sm">{{l("Reset")}}</button>
+                <a (click)="advancedFiltersAreShown=!advancedFiltersAreShown">
+                    {{advancedFiltersAreShown ? l("TakeUp") : l("Expand")}}
+                    <i class="anticon" [class.anticon-down]="!advancedFiltersAreShown" [class.anticon-up]="advancedFiltersAreShown"></i>
+                </a>
+            </nz-col>
+        </nz-row>
+    </form>
+
+    <nz-table #nzTable [nzFrontPagination]="false" [nzData]="dataItems" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber"
+              [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" [nzBordered]="true"
+              [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+        <thead (nzSortChange)="sort($event)" nzSingleSort>
+        <tr>
+
+            <th nzShowSort nzSortKey="userName">{{l('UserName')}}</th>
+            <th nzShowSort nzSortKey="name">{{l('Name')}}</th>
+            <th nzShowSort nzSortKey="surname">{{l('Surname')}}</th>
+            <th>{{l('Roles')}}</th>
+            <th nzShowSort nzSortKey="emailAddress">{{l('EmailAddress')}}</th>
+            <th nzShowSort nzSortKey="isEmailConfirm">{{l('EmailConfirm')}}</th>
+            <th nzShowSort nzSortKey="isActive">{{l('Active')}}</th>
+            <th nzShowSort nzSortKey="lastLoginTime">{{l('LastLoginTime')}}</th>
+            <th nzShowSort nzSortKey="creationTime">{{l('CreationTime')}}</th>
+            <th nzWidth="130px" nzRight="0px" style="text-align: center">
+                <span>{{l('Actions')}}</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of nzTable.data">
+
+            <td>{{item.userName}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.surname}}</td>
+            <td>{{getRolesAsString(item.roles)}}</td>
+            <td>{{item.emailAddress}}</td>
+            <td>
+                <nz-badge *ngIf="item.isEmailConfirm" [nzStatus]="'success'" [nzText]="l('Yes')"></nz-badge>
+                <nz-badge *ngIf="!item.isEmailConfirm" [nzStatus]="'default'" [nzText]="l('No')"></nz-badge>
+            </td>
+            <td>
+                <nz-badge *ngIf="item.isActive" [nzStatus]="'success'" [nzText]="l('Active')"></nz-badge>
+                <nz-badge *ngIf="!item.isActive" [nzStatus]="'default'" [nzText]="l('UnActive')"></nz-badge>
+            </td>
+            <td>
+                <span *ngIf="item.lastLoginTime">{{item.lastLoginTime | momentFormat:'L'}}</span>
+                <span *ngIf="!item.lastLoginTime">-</span>
+            </td>
+            <td>{{item.creationTime | momentFormat:'L'}}</td>
+            <td nzRight="0px">
+                <nz-dropdown [nzTrigger]="'click'">
+                    <a nz-dropdown>
+                        <button nz-button [nzType]="'primary'">
+                            <i class="anticon anticon-setting"></i>
+                            {{l("Actions")}}
+                            <i class="anticon anticon-down"></i>
+                        </button>
+                    </a>
+                    <ul nz-menu>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Administration.Users.Impersonation') && item.id !== appSession.userId"
+                               (click)="_impersonationService.impersonate(item.id, appSession.tenantId)">{{l('LoginAsThisUser')}}</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Administration.Users.Edit')"
+                               (click)="createOrUpdateUser(item.id, item.userName)">{{l('Edit')}}</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Administration.Users.ChangePermissions')"
+                               (click)="changePermission(item.id, item.userName)">{{l('Permissions')}}</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Administration.Users.ChangePermissions')"
+                               (click)="unlockUser(item.id)">{{l('Unlock')}}</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Administration.Users.Delete')"
+                               (click)="deleteUser(item.id, item.userName)">{{l('Delete')}}</a>
+                        </li>
+                    </ul>
+                </nz-dropdown>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+
+
+</div>

@@ -1,0 +1,79 @@
+<div [@routerTransition]>
+
+    <page-header [autoBreadcrumb]="false"></page-header>
+
+    <nz-card [nzTitle]="l('LanguagesHeaderInfo')">
+        <!--<ng-template #extra>-->
+        <!--<button nz-button *ngIf="isGranted('Pages.Administration.Languages.Create')"-->
+        <!--(click)="createOrEditLanguageModal.show()" [nzType]="'primary'">-->
+        <!--<i class="fa fa-plus"></i> {{l("CreateNewLanguage")}}-->
+        <!--</button>-->
+        <!--</ng-template>-->
+
+        <nz-table #nzTable [nzFrontPagination]="true" [nzData]="dataItems" [nzTotal]="totalItems"
+                  [(nzPageIndex)]="pageNumber"
+                  [(nzPageSize)]="pageSize" [nzLoading]="loading" [nzBordered]="true"
+                  [nzShowSizeChanger]="true">
+
+            <thead>
+            <tr>
+                <th>{{l('Name')}}</th>
+                <th>{{l('Code')}}</th>
+                <th *ngIf="appSession.tenantId ? true : false">{{l('Default')}}</th>
+                <th>{{l('CreationTime')}}</th>
+                <th>{{l('IsEnabled')}}</th>
+                <th>
+                    <span>{{l('Actions')}}</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of nzTable.data">
+                <td>
+                <span [ngClass]="{'text-bold' : defaultLanguageName === item.name}">
+                                        <i [ngClass]="item.icon" class="margin-right-5"></i>
+                                        {{item.displayName}}
+                    <span *ngIf="defaultLanguageName === item.name">({{l('Default')}})</span>
+                </span>
+                </td>
+                <td>{{item.name}}</td>
+                <td *ngIf="appSession.tenantId ? true : false">
+                    <nz-badge *ngIf="item.default" [nzStatus]="'success'" [nzText]="l('Yes')"></nz-badge>
+                    <nz-badge *ngIf="!item.default" [nzStatus]="'default'" [nzText]="l('No')"></nz-badge>
+                </td>
+                <td>{{item.creationTime | momentFormat:'L'}}</td>
+                <td>
+                    <nz-badge *ngIf="item.isDisabled" [nzStatus]="'success'" [nzText]="l('Yes')"></nz-badge>
+                    <nz-badge *ngIf="!item.isDisabled" [nzStatus]="'default'" [nzText]="l('No')"></nz-badge>
+                </td>
+
+                <td nzRight="0px"
+                    [hidden]="!isGrantedAny('Pages.Administration.Languages.Edit', 'Pages.Administration.Languages.Delete')">
+
+                    <nz-dropdown [nzTrigger]="'click'">
+                        <a nz-dropdown>
+                            <button nz-button [nzType]="'primary'">
+                                <i class="anticon anticon-setting"></i>
+                                {{l("Actions")}}
+                                <i class="anticon anticon-down"></i>
+                            </button>
+                        </a>
+                        <ul nz-menu>
+                            <li nz-menu-item>
+                                <a *ngIf="permission.isGranted('Pages.Administration.Languages.Edit')"
+                                   (click)="setAsDefaultLanguage(item)">{{l('SetAsDefaultLanguage')}}</a>
+                            </li>
+                            <li nz-menu-item>
+                                <a *ngIf="permission.isGranted('Pages.Administration.Languages.Delete') && item.tenantId === appSession.tenantId"
+                                   (click)="deleteLanguage(item)">{{l('Delete')}}</a>
+                            </li>
+                        </ul>
+                    </nz-dropdown>
+                </td>
+            </tr>
+
+            </tbody>
+        </nz-table>
+    </nz-card>
+
+</div>

@@ -1,0 +1,106 @@
+<div [@routerTransition]>
+    <nz-card [nzTitle]="'IOCC Installation'" [nzExtra]="extra">
+        <ng-template #extra>
+            <button nz-button id="SaveButton" [nzType]="'primary'" [nzLoading]="saving" (click)="saveAll()">Save
+            </button>
+        </ng-template>
+
+        <form nz-form>
+            <nz-alert nzType="warning" nzBanner="true"
+                      nzMessage="Clear your cookies before installing IOCC ! Otherwise, you might have some problem">
+            </nz-alert>
+
+            <nz-form-item>
+                <nz-form-label> Connection String</nz-form-label>
+                <nz-form-item>
+                    <input nz-input type="text" placeholder="Connection String"
+                           [(ngModel)]="setupSettings.connectionString" name="connectionString"
+                           autocomplete="off">
+                </nz-form-item>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label> Admin Password</nz-form-label>
+                <nz-form-item>
+                    <input nz-input type="password" placeholder="Admin Password"
+                           [(ngModel)]="setupSettings.adminPassword" name="adminPassword"
+                           autocomplete="off">
+                </nz-form-item>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>Client Side URL</nz-form-label>
+                <nz-form-control>
+                    <input nz-input type="text" placeholder="Client Side URL"
+                           [(ngModel)]="setupSettings.webSiteUrl" name="webSiteUrl"></nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>Server Side URL</nz-form-label>
+                <nz-form-control>
+                    <input nz-input type="text" placeholder="Server Side URL"
+                           [(ngModel)]="setupSettings.serverUrl" name="serverUrl" >
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>Default Language</nz-form-label>
+                <nz-form-control>
+                    <nz-select [(ngModel)]="setupSettings.defaultLanguage"
+                               name="defaultLanguage">
+                        <nz-option *ngFor="let language of languages" [nzValue]="language.value"
+                                   [nzLabel]="language.name">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>SMTP Settings</nz-form-label>
+                <nz-form-control>
+                    <input nz-input type="email" placeholder="Default from address"
+                           [(ngModel)]="setupSettings.smtpSettings.defaultFromAddress"
+                           name="defaultFromAddress">
+                    <input nz-input type="text" placeholder="Default from displayName"
+                           [(ngModel)]="setupSettings.smtpSettings.defaultFromDisplayName"
+                           name="defaultFromDisplayName">
+                    <input nz-input type="text" placeholder="SMTP host"
+                           [(ngModel)]="setupSettings.smtpSettings.smtpHost" name="smtpHost">
+                    <input nz-input type="number" placeholder="SMTP port"
+                           [(ngModel)]="setupSettings.smtpSettings.smtpPort" name="smtpPort">
+
+                    <label nz-checkbox [(ngModel)]="setupSettings.smtpSettings.smtpEnableSsl"
+                           name="smtpEnableSsl" value="true">
+                        UseSsl
+                    </label>
+                    <label nz-checkbox [(ngModel)]="setupSettings.smtpSettings.smtpUseDefaultCredentials"
+                           name="smtpUseDefaultCredentials" value="true">
+                        Use Default Credentials
+                    </label>
+
+
+                    <input nz-input type="text" placeholder="Domain name"
+                           [(ngModel)]="setupSettings.smtpSettings.smtpDomain" name="smtpDomain">
+                    <input nz-input type="text" placeholder="User name"
+                           [(ngModel)]="setupSettings.smtpSettings.smtpUserName" name="smtpUserName">
+                    <input nz-input type="password" placeholder="Password"
+                           [(ngModel)]="setupSettings.smtpSettings.smtpPassword" name="smtpPassword">
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label>
+                    Invoice Info
+                </nz-form-label>
+                <nz-form-control>
+                    <input nz-input type="text" name="legalName"
+                           [(ngModel)]="setupSettings.billInfo.legalName" placeholder="Legal name">
+                    <textarea nz-input name="billAddress" nzAutosize="{ minRows: 5, maxRows: 10 }"
+                              [(ngModel)]="setupSettings.billInfo.address" placeholder="Address"></textarea>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-card>
+</div>
+

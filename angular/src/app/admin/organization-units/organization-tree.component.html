@@ -1,0 +1,39 @@
+<nz-card [nzBordered]="true" [nzTitle]="l('OrganizationTree')" [nzExtra]="extra">
+    <ng-template #extra>
+        <button nz-button *ngIf="isGranted('Pages.Administration.OrganizationUnits.ManageOrganizationTree')"
+                (click)="addUnit(null)"
+                [nzType]="'primary'">
+            <i class="anticon anticon-plus"></i>{{l("AddRootUnit")}}
+        </button>
+    </ng-template>
+
+    <nz-spin [nzSpinning]="loading">
+        <nz-tree #nzTree [nzData]="nodes" [nzDefaultExpandAll]="true">
+            <ng-template #nzTreeTemplate let-node>
+            <span class="custom-node" aria-grabbed="true"
+                  [class.active]="selectedNode !== null && selectedNode === node"
+                  (contextmenu)="isGranted('Pages.Administration.OrganizationUnits.ManageOrganizationTree') ? contextMenu($event,template) : null"
+                  (click)="updateSelectedNode(node, $event)">
+                <span>
+                    <i class="anticon anticon-folder-open" *ngIf="!node.isLeaf"></i>
+                    <i class="anticon anticon-file" *ngIf="node.isLeaf"></i>{{ node.title }}
+                </span>
+            </span>
+
+                <ng-template #template>
+                    <ul nz-menu nzInDropDown (nzClick)="close($event)">
+                        <li nz-menu-item (click)="editUnit(node, $event)">{{l("Edit")}}</li>
+                        <li nz-menu-item (click)="addUnit(node, $event)">{{l("AddSubUnit")}}</li>
+                        <li nz-menu-item (click)="deleteUnit(node, $event)">{{l("Delete")}}</li>
+                    </ul>
+                </ng-template>
+            </ng-template>
+        </nz-tree>
+    </nz-spin>
+
+
+    <div *ngIf="!totalUnitCount" class="text-muted">
+        {{l("NoOrganizationUnitDefinedYet")}}
+    </div>
+
+</nz-card>

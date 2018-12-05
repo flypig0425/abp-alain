@@ -1,0 +1,34 @@
+<form nz-form #editForm="ngForm" novalidate (ngSubmit)="save()" *ngIf="settings">
+    <h4>{{l("ReceiveNotifications")}}</h4>
+
+    <div>
+        <nz-switch name="ReceiveNotifications" [(ngModel)]="settings.receiveNotifications"></nz-switch>
+        <nz-alert [nzType]="'info'" [nzMessage]="l('ReceiveNotifications_Definition')"></nz-alert>
+    </div>
+
+    <h4 *ngIf="settings.notifications.length" class="m--margin-top-20">{{l("NotificationTypes")}}</h4>
+    <nz-alert *ngIf="settings.notifications.length && !settings.receiveNotifications"
+              [nzType]="'warning'" [nzMessage]="l('ReceiveNotifications_DisableInfo')"></nz-alert>
+
+    <div *ngFor="let notification of settings.notifications">
+
+        <label nz-checkbox name="Notification_{{notification.name}}" [(ngModel)]="notification.isSubscribed"
+                   [disabled]="!settings.receiveNotifications">
+            {{notification.displayName}}
+        </label>
+        <nz-alert nzType="info" *ngIf="notification.description" nzMessage="{{notification.description}}"></nz-alert>
+
+    </div>
+
+    <div class="modal-footer">
+        <button nz-button [disabled]="saving" type="button" (click)="close()">
+            {{l("Cancel")}}
+        </button>
+        <button type="submit" nz-button [nzType]="'primary'" [nzLoading]="saving">
+            <i class="anticon anticon-save"></i> <span>{{l("Save")}}
+        </span>
+        </button>
+    </div>
+</form>
+
+

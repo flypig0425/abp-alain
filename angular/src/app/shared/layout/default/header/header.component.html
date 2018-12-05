@@ -1,0 +1,48 @@
+﻿<div class="alain-default__header-logo">
+    <a routerLink="/" target="_blank" class="alain-default__header-logo-link">
+        <img *ngIf="!settings.layout.collapsed" [src]="defaultLogo"
+             alt="logo" width="139" height="35"/>
+        <img *ngIf="!settings.layout.collapsed && appSession.tenant && appSession.tenant.logoId"
+             [src]="remoteServiceBaseUrl + '/TenantCustomization/GetTenantLogo?skin=light' + '&tenantId=' + appSession.tenant.id + '&id=' + appSession.tenant.logoId"
+             alt="logo" width="139" height="35"/>
+    </a>
+</div>
+<div class="alain-default__nav-wrap">
+    <ul class="alain-default__nav">
+        <!-- Menu -->
+        <li>
+            <div class="alain-default__nav-item" (click)="toggleCollapsedSidebar()">
+                <i class="anticon anticon-menu-{{settings.layout.collapsed ? 'unfold' : 'fold'}}"></i>
+            </div>
+        </li>
+    </ul>
+    <!--<header-search class="header-search"></header-search>-->
+    <ul class="alain-default__nav">
+        <li class="hidden-mobile">
+            <header-i18n></header-i18n>
+        </li>
+
+        <li class="hidden-mobile">
+            <headerNotifications></headerNotifications>
+        </li>
+
+        <li class="hidden-mobile">
+            <nz-dropdown nzTrigger="click" nzPlacement="bottomRight">
+                <div class="alain-default__nav-item" nz-dropdown>
+                    <i class="anticon anticon-setting"></i>
+                </div>
+                <div nz-menu style="width:200px">
+                    <div nz-menu-item>
+                        <header-fullscreen></header-fullscreen>
+                    </div>
+                    <div nz-menu-item>
+                        <header-storage></header-storage>
+                    </div>
+                </div>
+            </nz-dropdown>
+        </li>
+        <li class="hidden-mobile">
+            <header-user></header-user>
+        </li>
+    </ul>
+</div>

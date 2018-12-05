@@ -1,0 +1,87 @@
+<form nz-form #tenantEditForm="ngForm" novalidate (submit)="save()" *ngIf="tenant">
+
+    <nz-form-item>
+        <nz-form-label>{{l("Name")}} *</nz-form-label>
+        <nz-form-control>
+            <input nz-input #nameInput="ngModel" type="text" name="Name" [ngClass]="{'edited':tenant.name}"
+                   [(ngModel)]="tenant.name" required maxlength="128" autoFocus>
+            <validation-messages [formCtrl]="nameInput"></validation-messages>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item *ngIf="currentConnectionString">
+        <nz-form-label>{{l("DatabaseConnectionString")}} *</nz-form-label>
+        <nz-form-control>
+            <input nz-input #connectionStringInput="ngModel" type="text" name="ConnectionString"
+                   [(ngModel)]="tenant.connectionString" required maxlength="1024">
+            <validation-messages [formCtrl]="connectionStringInput"></validation-messages>
+        </nz-form-control>
+    </nz-form-item>
+    <div *ngIf="currentConnectionString">
+        <span class="help-block text-warning">{{l("TenantDatabaseConnectionStringChangeWarningMessage")}}</span>
+    </div>
+
+    <nz-form-item>
+        <nz-form-label>{{l("Edition")}}</nz-form-label>
+        <nz-form-control>
+            <nz-select name="edition" [(ngModel)]="tenant.editionId"
+                       (change)="onEditionChange($event)">
+                <nz-option *ngFor="let edition of editions" [nzValue]="edition.value" [nzLabel]="edition.displayText">
+                </nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item [hidden]="!isSubscriptionFieldsVisible">
+        <nz-form-control>
+            <label nz-checkbox name="IsUnlimited"
+                   [(ngModel)]="isUnlimited" (ngModelChange)="onUnlimitedChange()">
+                {{l("UnlimitedTimeSubscription")}}
+            </label>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item [hidden]="isUnlimited || !isSubscriptionFieldsVisible"
+                  [ngClass]="{'has-error': !subscriptionEndDateUtcIsValid }">
+        <nz-form-label>{{l("SubscriptionEndDateUtc")}}</nz-form-label>
+        <nz-form-control>
+            <nz-date-picker #SubscriptionEndDateUtc name="SubscriptionEndDateUtc"
+                            [ngClass]="{'edited':tenant.subscriptionEndDateUtc}"
+                            [(ngModel)]="date"
+                            (ngModelChange)="onDateChange($event)"
+                            [required]="!isUnlimited"></nz-date-picker>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item [hidden]="!isSubscriptionFieldsVisible">
+        <nz-form-control>
+            <label nz-checkbox name="IsInTrialPeriod"
+                   [disabled]="selectedEditionIsFree()" [(ngModel)]="tenant.isInTrialPeriod">
+                {{l("IsInTrialPeriod")}}
+            </label>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+        <nz-form-control>
+            <label nz-checkbox name="IsActive"
+                   [(ngModel)]="tenant.isActive">
+                {{l("Active")}}
+            </label>
+        </nz-form-control>
+    </nz-form-item>
+
+    <div class="modal-footer">
+        <button nz-button [disabled]="saving" [nzType]="'default'" type="button" (click)="close()">{{l("Cancel")}}
+        </button>
+        <button nz-button [nzType]="'primary'" type="submit"
+                [disabled]="!tenantEditForm.form.valid || saving || !subscriptionEndDateUtcIsValid"
+                [nzLoading]="saving">
+            <i class="anticon anticon-save"></i>
+            <span>{{l("Save")}}</span>
+        </button>
+    </div>
+</form>
+
+
+

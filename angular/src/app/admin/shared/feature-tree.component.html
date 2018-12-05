@@ -1,0 +1,21 @@
+<nz-tree [nzData]="treeData" [nzCheckable]="true" [nzCheckStrictly]="true"
+         [nzMultiple]="true" [(nzCheckedKeys)]="selectedFeatures">
+    <ng-template #nzTreeTemplate let-node>
+        <span>
+            <i class="anticon anticon-folder-open" *ngIf="!node.isLeaf"></i>
+            <i class="anticon anticon-file" *ngIf="node.isLeaf"></i>
+        </span>
+        <span style="margin-right: 5px;">{{node.title}}</span>
+        <input type="text"
+               [attr.name]="node?.origin?.data.name"
+               *ngIf="node?.origin?.data.inputType.name === 'SINGLE_LINE_STRING'"
+               [(ngModel)]="node.origin.value"
+               (change)="onInputChange(node)">
+        <select *ngIf="node?.origin?.data.inputType.name === 'COMBOBOX'" [(ngModel)]="node.origin.value"
+                (change)="onDropdownChange(node)">
+            <option *ngFor="let item of node?.origin?.inputType.itemSource.items" [value]="item.value">
+                {{item.displayName}}
+            </option>
+        </select>
+    </ng-template>
+</nz-tree>

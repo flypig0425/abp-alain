@@ -1,0 +1,43 @@
+<nz-card [nzBordered]="true" [nzExtra]="extra"
+         [nzTitle]="organizationUnit ? organizationUnit.displayName : l('Members')">
+
+    <ng-template #extra>
+        <button nz-button *ngIf="isGranted('Pages.Administration.OrganizationUnits.ManageMembers')"
+                (click)="openAddModal()" [nzType]="'primary'" [disabled]="organizationUnit ? false : true">
+            <i class="anticon anticon-plus"></i> {{l("AddMember")}}
+        </button>
+    </ng-template>
+
+    <nz-table #nzTable [nzFrontPagination]="false" [nzData]="dataItems" [nzTotal]="totalItems"
+              [(nzPageIndex)]="pageNumber"
+              [(nzPageSize)]="pageSize" [nzLoading]="isTableLoading" [nzBordered]="true"
+              [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+        <thead>
+        <tr>
+            <th>{{l('UserName')}}</th>
+            <th>{{l('AddedTime')}}</th>
+            <th [hidden]="!permission.isGranted('Pages.Administration.OrganizationUnits.ManageMembers')">
+                {{l('Delete')}}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of nzTable.data">
+            <td>{{item.userName}}</td>
+            <td>{{item.addedTime | momentFormat:'L'}}</td>
+            <td [hidden]="!permission.isGranted('Pages.Administration.OrganizationUnits.ManageMembers')">
+                <button nz-button [nzType]="'danger'"
+                        (click)="delete(item)"
+                        title="{{l('Delete')}}">
+                    <i class="anticon anticon-delete"></i>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+
+    <div *ngIf="!organizationUnit" class="text-muted">
+        {{l("SelectAnOrganizationUnitToSeeMembers")}}
+    </div>
+</nz-card>
+

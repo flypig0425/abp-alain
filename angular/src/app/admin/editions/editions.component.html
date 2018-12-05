@@ -1,0 +1,56 @@
+<div [@routerTransition]>
+    <page-header [autoBreadcrumb]="false" title="{{l('Editions')}}" [action]="action">
+        {{l("EditionsHeaderInfo")}}
+
+        <ng-template #action>
+            <button nz-button *ngIf="permission.isGranted('Pages.Editions.Create')"
+                    (click)="createEdition()" [nzType]="'primary'">
+                <i class="anticon anticon-plus"></i>
+                {{l("CreateNewEdition")}}
+            </button>
+        </ng-template>
+    </page-header>
+
+    <nz-table #nzTable [nzFrontPagination]="true" [nzData]="dataItems" [nzTotal]="totalItems"
+              [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
+              [nzLoading]="isTableLoading" [nzBordered]="true" [nzShowSizeChanger]="true"
+              (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+        <thead>
+        <tr>
+            <th>{{l('EditionName')}}</th>
+            <th>{{l('CreationTime')}}</th>
+            <th nzWidth="130px" nzRight="0px" style="text-align: center">
+                <span>{{l('Actions')}}</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of nzTable.data">
+            <td>{{item.displayName}}</td>
+            <td>{{item.creationTime | momentFormat:'L'}}</td>
+            <td nzRight="0px">
+                <nz-dropdown [nzTrigger]="'click'">
+                    <a nz-dropdown>
+                        <button nz-button [nzType]="'primary'">
+                            <i class="anticon anticon-setting"></i>
+                            {{l("Actions")}}
+                            <i class="anticon anticon-down"></i>
+                        </button>
+                    </a>
+                    <ul nz-menu>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Editions.Edit')"
+                               (click)="editEdition(item)">{{l('Edit')}}</a>
+                        </li>
+                        <li nz-menu-item>
+                            <a *ngIf="permission.isGranted('Pages.Editions.Delete')"
+                               (click)="delete(item)">{{l('Delete')}}</a>
+                        </li>
+                    </ul>
+                </nz-dropdown>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+
+</div>

@@ -1,0 +1,46 @@
+﻿using System.Collections.Generic;
+using Abp.Runtime.Session;
+using Abp.Timing.Timezone;
+using {{Namespace_Here}}.DataExporting.Excel.EpPlus;
+using {{Namespace_Here}}.{{Namespace_Relative_Full_Here}}.Dtos;
+using {{Namespace_Here}}.Dto;
+
+namespace {{Namespace_Here}}.{{Namespace_Relative_Full_Here}}.Exporting
+{
+    public class {{Entity_Name_Plural_Here}}ExcelExporter : EpPlusExcelExporterBase, I{{Entity_Name_Plural_Here}}ExcelExporter
+    {
+
+        private readonly ITimeZoneConverter _timeZoneConverter;
+        private readonly IAbpSession _abpSession;
+
+        public {{Entity_Name_Plural_Here}}ExcelExporter(
+            ITimeZoneConverter timeZoneConverter,
+            IAbpSession abpSession)
+        {
+            _timeZoneConverter = timeZoneConverter;
+            _abpSession = abpSession;
+        }
+
+        public FileDto ExportToFile(List<Get{{Entity_Name_Here}}ForView> {{entity_Name_Plural_Here}})
+        {
+            return CreateExcelPackage(
+                "{{Entity_Name_Plural_Here}}.xlsx",
+                excelPackage =>
+                {
+                    var sheet = excelPackage.Workbook.Worksheets.Add(L("{{Entity_Name_Plural_Here}}"));
+                    sheet.OutLineApplyStyle = true;
+
+                    AddHeader(
+                        sheet{{Property_Header_Here}}{{NP_Header_Here}}
+                        );
+
+                    AddObjects(
+                        sheet, 2, {{entity_Name_Plural_Here}}{{Property_Params_Here}}{{NP_Params_Here}}
+                        );
+
+					{{Property_DateTime_Formatter_Here}}
+
+                });
+        }
+    }
+}

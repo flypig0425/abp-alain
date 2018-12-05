@@ -1,0 +1,70 @@
+﻿import { Component, ViewChild, Injector, Output, EventEmitter, AfterViewInit, Input} from '@angular/core';
+import { {{Entity_Name_Plural_Here}}ServiceProxy, CreateOrEdit{{Entity_Name_Here}}Dto } from '@shared/service-proxies/service-proxies';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd';
+import { finalize } from 'rxjs/operators';
+import { ModalHelper } from '@delon/theme';
+
+import { AppComponentBase } from '@shared/common/app-component-base';
+
+{{NP_Looped_Lookup_Component_Import_Here}}
+
+@Component({
+    selector: 'createOrEdit{{Entity_Name_Here}}Modal',
+    templateUrl: './create-or-edit-{{entity_Name_Here}}-modal.component.html'
+})
+export class CreateOrEdit{{Entity_Name_Here}}ModalComponent extends AppComponentBase implements AfterViewInit{
+
+	@Input() {{entity_Name_Here}}Id: {{Primary_Key_Type_Here}};
+
+    active = false;
+    saving = false;
+
+    {{entity_Name_Here}}: CreateOrEdit{{Entity_Name_Here}}Dto = new CreateOrEdit{{Entity_Name_Here}}Dto();
+	{{NP_Looped_Display_Declaration_Here}}
+
+    constructor(
+        injector: Injector,
+		private modal: NzModalRef,
+        private _{{entity_Name_Plural_Here}}ServiceProxy: {{Entity_Name_Plural_Here}}ServiceProxy,
+        private _modalHelper: ModalHelper
+    ) {
+        super(injector);
+    }
+
+	ngAfterViewInit(): void {
+        this.show(this.{{entity_Name_Here}}Id);
+    }
+
+    show({{entity_Name_Here}}Id?: {{Primary_Key_Type_Here}}): void {
+        if (!{{entity_Name_Here}}Id) { 
+			this.{{entity_Name_Here}} = new CreateOrEdit{{Entity_Name_Here}}Dto();
+			this.{{entity_Name_Here}}.id = {{entity_Name_Here}}Id;
+			{{NP_Looped_Display_Init_Here}}
+        }
+		else{
+			this._{{entity_Name_Plural_Here}}ServiceProxy.get{{Entity_Name_Here}}ForEdit({{entity_Name_Here}}Id).subscribe(result => {
+				this.{{entity_Name_Here}} = result.{{entity_Name_Here}};
+				{{NP_Looped_Edit_Bind_Here}}
+
+			});
+		}  
+    }
+
+    save(): void {
+			this.saving = true;
+			this._{{entity_Name_Plural_Here}}ServiceProxy.createOrEdit(this.{{entity_Name_Here}})
+			 .pipe(finalize(() => { this.saving = false; }))
+			 .subscribe(() => {
+			    this.notify.info(this.l('SavedSuccessfully'));
+				this.modal.close(true);
+             });
+    }
+
+	{{NP_Looped_OpenModal_Here}}
+
+	{{NP_Looped_SetNull_Here}}
+
+    close(): void {
+        this.modal.destroy();
+    }
+}

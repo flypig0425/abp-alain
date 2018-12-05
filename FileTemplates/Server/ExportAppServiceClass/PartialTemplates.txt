@@ -1,0 +1,70 @@
+{
+"propertyTemplates":[
+		{
+			"placeholder" : "{{Property_Header_Here}}",
+			"condition" : "{{Property_Listed_Here}} == true",
+			"templates" : [
+					{
+					"type" : "default",
+					"content" : ",
+                        L(\"{{Property_Name_Here}}\")"
+					}
+				]
+		},
+		{
+			"placeholder" : "{{Property_DateTime_Formatter_Here}}",
+			"condition" : "{{Property_Listed_Here}} == true",
+			"templates" : [
+					{
+					"type" : "DateTime",
+					"content" : "var {{property_Name_Here}}Column = sheet.Column({{Loop_Index}});
+                    {{property_Name_Here}}Column.Style.Numberformat.Format = \"yyyy-mm-dd\";
+					{{property_Name_Here}}Column.AutoFit();
+					"
+					},
+					{
+					"type" : "default",
+					"content" : ""
+					}
+				]
+		},
+		{
+			"placeholder" : "{{Property_Params_Here}}",
+			"condition" : "{{Property_Listed_Here}} == true",
+			"templates" : [
+					{
+					"type" : "DateTime",
+					"content" : ",
+                        _ => _timeZoneConverter.Convert(_.{{Entity_Name_Here}}.{{Property_Name_Here}}, _abpSession.TenantId, _abpSession.GetUserId())"
+					},
+					{
+					"type" : "default",
+					"content" : ",
+                        _ => _.{{Entity_Name_Here}}.{{Property_Name_Here}}"
+					}
+				]
+		}
+	],
+"navigationPropertyTemplates":[
+		{
+			"placeholder" : "{{NP_Header_Here}}",
+			"templates" : [
+					{
+					"relation" : "single",
+					"content" : ",
+                        (L(\"{{NP_Foreign_Entity_Name_Here}}\")) + L(\"{{NP_Display_Property_Name_Here}}\")"
+					}
+				]
+		},
+		{
+			"placeholder" : "{{NP_Params_Here}}",
+			"templates" : [
+					{
+					"relation" : "single",
+					"content" : ",
+                        _ => _.{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}"
+					}
+				]
+		}
+	]
+}

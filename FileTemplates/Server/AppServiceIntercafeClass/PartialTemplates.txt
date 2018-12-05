@@ -1,0 +1,30 @@
+{
+"navigationPropertyTemplates":[
+		{
+			"placeholder" : "{{NP_Looped_Method_Declaration_Here}}",
+			"templates" : [
+					{
+					"relation" : "single",
+					"preventDuplicate":true,
+					"content" : "
+		Task<PagedResultDto<{{NP_Foreign_Entity_Name_Here}}LookupTableDto>> GetAll{{NP_Foreign_Entity_Name_Here}}ForLookupTable(GetAllForLookupTableInput input);
+		"
+					}
+				]
+		}
+	],
+"conditionalTemplates":[
+		{
+			"placeholder": "{{Primary_Key_Inside_Tag_Here}}",
+			"condition": "{{Primary_Key_Here}} != 'int'",
+			"content": "<{{Primary_Key_Here}}>"
+		},
+		{
+			"placeholder": "{{Get_Excel_Method_Here}}",
+			"condition": "{{Create_Excel_Export_Here}} == true",
+			"content": "Task<FileDto> Get{{Entity_Name_Plural_Here}}ToExcel(GetAll{{Entity_Name_Plural_Here}}ForExcelInput input);
+
+		"
+		}
+	]
+}

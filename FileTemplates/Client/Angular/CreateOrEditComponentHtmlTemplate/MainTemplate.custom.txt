@@ -1,0 +1,12 @@
+﻿<form nz-form #{{entity_Name_Here}}Form="ngForm" (ngSubmit)="save()" novalidate nzLayout="vertical" se-container>
+{{NP_Looped_NzForm_Template_Here}} {{Property_Looped_Template_Here}}
+    <div class="modal-footer">
+        <button nz-button [disabled]="saving" [nzType]="'default'" type="button" (click)="close()">{{l("Cancel")}}
+        </button>
+        <button nz-button [nzType]="'primary'" type="submit" [disabled]="!{{entity_Name_Here}}Form.form.valid" [nzLoading]="saving">
+            <i class="action action-save"></i>
+            <span>{{l("Save")}}</span>
+        </button>
+    </div>
+</form>
+

@@ -1,0 +1,12 @@
+﻿<div>
+    <sv-container>
+{{Property_Looped_Template_Here}}
+{{NP_Looped_Template_Here}}
+    </sv-container>
+   
+    <div class="modal-footer">
+        <button nz-button  [nzType]="'primary'" type="button" (click)="close()">{{l("Close")}}
+        </button>
+    </div>
+</div>
+

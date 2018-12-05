@@ -1,0 +1,81 @@
+﻿<div [@routerTransition]>
+    <page-header [autoBreadcrumb]="false" [action]="action">
+        {{l("{{Entity_Name_Here}}sHeaderInfo")}}
+        <ng-template #action>
+            {{Get_Excel_Button_Here}}
+            <button nz-button *ngIf="isGranted('{{Permission_Value_Here}}.Create')" (click)="create{{Entity_Name_Here}}()" [nzType]="'primary'">
+                <i class="anticon anticon-plus"></i>{{l("CreateNew{{Entity_Name_Here}}")}}
+            </button>
+        </ng-template>
+    </page-header>
+    <nz-card [nzBordered]="false">
+        <div nz-row>
+            <form nz-form se-container>
+                <se>
+                    <nz-input-group nzSearch [nzSuffix]="suffixButton" style="width: 100%;">
+                            <input type="text" nz-input autoFocus name="filterText" [(ngModel)]="filterText" placeholder="{{l('SearchWithThreeDot')}}">
+                    </nz-input-group>
+                    <ng-template #suffixButton>
+                        <button nz-button nzType="primary" nzSearch (click)="refresh()" type="submit">Search</button>
+                    </ng-template>
+                </se>
+
+                <div [hidden]="!advancedFiltersAreShown">
+{{Property_Filter_Template_Here}}{{NP_Filter_Template_Here}}
+                </div>
+
+                <nz-col [nzMd]="advancedFiltersAreShown ? 24 : 12" nzSm="24"
+                        [class.text-right]="advancedFiltersAreShown">
+                    <div>
+                        <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="isTableLoading">{{l("Search")}}</button>
+                        <button nz-button type="reset" (click)="refresh()" class="mx-sm">{{l("Reset")}}</button>
+                        <a (click)="advancedFiltersAreShown=!advancedFiltersAreShown">
+                            {{advancedFiltersAreShown ? l('TakeUp') : l('Expand')}}
+                            <i class="anticon" [class.anticon-down]="!advancedFiltersAreShown"
+                               [class.anticon-up]="advancedFiltersAreShown"></i>
+                        </a>
+                    </div>
+                </nz-col>
+            </form>
+        </div>
+
+        <div nz-row>
+            <nz-table #nzTable [nzFrontPagination]="false" [nzData]="dataItems" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
+                [nzLoading]="isTableLoading" [nzBordered]="true" [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+                <thead (nzSortChange)="sort($event)" nzSingleSort>
+                    <tr>
+                        {{NP_Looped_NzTableHeader_Template_Here}} {{Property_Looped_NzTableHeader_Template_Here}}
+                        <th nzWidth="130px" nzRight="0px" style="text-align: center" [hidden]="!isGrantedAny('{{Permission_Value_Here}}.Edit', '{{Permission_Value_Here}}.Delete')">
+                            {{l("Actions")}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of nzTable.data">
+                        {{NP_Looped_NzTableBody_Template_Here}} {{Property_Looped_NzTableBody_Template_Here}}
+                        <td nzRight="0px" [hidden]="!isGrantedAny('{{Permission_Value_Here}}.Edit', '{{Permission_Value_Here}}.Delete')">
+
+                            <nz-dropdown [nzTrigger]="'click'">
+                                <a nz-dropdown>
+                                    <button nz-button [nzType]="'primary'">
+                                        <i class="anticon anticon-setting"></i>
+                                        {{l("Actions")}}
+                                        <i class="anticon anticon-down"></i>
+                                    </button>
+                                </a>
+                                <ul nz-menu>
+{{View_Button_Here}}                                
+                                    <li nz-menu-item>
+                                        <a *ngIf="permission.isGranted('{{Permission_Value_Here}}.Edit')" (click)="edit{{Entity_Name_Here}}(item.{{entity_Name_Here}}.id)">{{l('Edit')}}</a>
+                                    </li>
+                                    <li nz-menu-item>
+                                        <a *ngIf="permission.isGranted('{{Permission_Value_Here}}.Delete')" (click)="delete(item.{{entity_Name_Here}})">{{l('Delete')}}</a>
+                                    </li>
+                                </ul>
+                            </nz-dropdown>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+    </nz-card>
+</div>

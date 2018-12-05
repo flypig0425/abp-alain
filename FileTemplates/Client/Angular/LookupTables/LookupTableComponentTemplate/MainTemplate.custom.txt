@@ -1,0 +1,59 @@
+﻿import { Component, ViewChild, Injector, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
+import {
+    {{Entity_Name_Plural_Here}}ServiceProxy, 
+    {{NP_Foreign_Entity_Name_Here}}LookupTableDto,
+ } from '@shared/service-proxies/service-proxies';
+import { AppComponentBase } from '@shared/common/app-component-base';
+import { PagedListingComponentBase, PagedRequestDto } from '@shared/common/PagedListingComponentBase';
+import { NzModalRef } from 'ng-zorro-antd';
+import { ModalHelper } from '@delon/theme';
+
+@Component({
+    selector: '{{nP_Foreign_Entity_Name_Here}}LookupTableModal',
+    styleUrls: ['./{{nP_Foreign_Entity_Name_Here}}-lookup-table-modal.component.less'],
+    encapsulation: ViewEncapsulation.None,
+    templateUrl: './{{nP_Foreign_Entity_Name_Here}}-lookup-table-modal.component.html'
+})
+export class {{NP_Foreign_Entity_Name_Here}}LookupTableModalComponent extends PagedListingComponentBase<{{NP_Foreign_Entity_Name_Here}}LookupTableDto>{
+
+    filterText = '';
+
+    saving = false;
+
+    dataItems: {{NP_Foreign_Entity_Name_Here}}LookupTableDto[] = [];
+    
+    constructor(
+        injector: Injector,
+        private _{{entity_Name_Plural_Here}}ServiceProxy: {{Entity_Name_Plural_Here}}ServiceProxy,
+        private modal: NzModalRef
+    ) {
+        super(injector);
+    }
+
+    setAndSave({{nP_Foreign_Entity_Name_Here}}: {{NP_Foreign_Entity_Name_Here}}LookupTableDto) {
+        this.modal.close({
+            id: {{nP_Foreign_Entity_Name_Here}}.id,
+            displayName : {{nP_Foreign_Entity_Name_Here}}.displayName
+        });
+    }
+
+    protected delete({{nP_Foreign_Entity_Name_Here}}: {{NP_Foreign_Entity_Name_Here}}LookupTableDto): void {
+    }
+
+    protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
+        this._{{entity_Name_Plural_Here}}ServiceProxy.getAll{{NP_Foreign_Entity_Name_Here}}ForLookupTable(
+            this.filterText ? this.filterText : '',
+            '',
+            request.skipCount,
+            request.maxResultCount
+        ).subscribe(result => {
+            this.dataItems = result.items;
+            finishedCallback();
+            this.showPaging(result, pageNumber);
+        });
+    }
+
+    close(): void {
+        this.modal.destroy();
+    }
+}

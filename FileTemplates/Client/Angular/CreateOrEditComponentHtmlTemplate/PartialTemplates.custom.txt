@@ -1,0 +1,141 @@
+{
+"propertyTemplates":[
+		{
+			"placeholder" : "{{Property_Looped_Template_Here}}",
+			"condition" : "{{Property_CreateOrEdit_Here}} == true",
+			"templates" : [
+					{
+					"type" : "enum",
+					"content" : "
+	<se label=\"{{l('{{Property_Name_Here}}')}}\">
+		<nz-select name=\"{{Property_Name_Here}}\" id=\"{{Property_Name_Here}}Select\" [(ngModel)]=\"{{entity_Name_Here}}.{{property_Name_Here}}\">
+			{{Enum_Option_Looped_Template_Here}}
+			</nz-select>
+	</se>
+					"
+					},
+					{
+					"type" : "numeric",
+					"content" : "
+	<se label=\"{{l('{{Property_Name_Here}}')}}\">
+		<input nz-input type=\"number\" [(ngModel)]=\"{{entity_Name_Here}}.{{property_Name_Here}}\" name=\"{{Property_Name_Here}}\" {{MinValue}} {{MaxValue}}/>
+	</se>
+					"
+					},
+					{
+					"type" : "bool",
+					"content" : "
+	<se>
+		<label nz-checkbox name=\"{{Property_Name_Here}}\" [(ngModel)]=\"{{entity_Name_Here}}.{{property_Name_Here}}\">
+			{{l(\"{{Property_Name_Here}}\")}}
+		</label>
+	</se>
+					"
+					},
+					{
+					"type" : "DateTime",
+					"content" : "
+	<se label=\"{{l('{{Property_Name_Here}}')}}\">
+		<nz-date-picker [(ngModel)]=\"{{entity_Name_Here}}.{{property_Name_Here}}\" id=\"Edit_{{Entity_Name_Here}}_{{Property_Name_Here}}\" name=\"Edit_{{Entity_Name_Here}}_{{Property_Name_Here}}\"></nz-date-picker>
+	</se>
+					"
+					},
+					{
+					"type" : "default",
+					"content" : "
+	<se label=\"{{l('{{Property_Name_Here}}')}}\">
+		<input nz-input type=\"text\" [(ngModel)]=\"{{entity_Name_Here}}.{{property_Name_Here}}\" name=\"{{Property_Name_Here}}\" {{Regex}} {{MinLengthHere}} {{MaxLengthHere}} {{Required}}/>
+	</se>
+					"
+					}
+				]
+		}
+	],
+"navigationPropertyTemplates":[
+		{
+			"placeholder" : "{{NP_Looped_NzForm_Template_Here}}",
+			"templates" : [
+					{
+					"relation" : "single",
+					"content" : "
+	<se label=\"{{l('{{NP_Foreign_Entity_Name_Here}}')}}\">
+		<nz-input-group nzSearch nzCompact [nzSuffix]=\"{{nP_Foreign_Entity_Name_Here}}SuffixButton\">
+			<input nz-input name=\"{{nP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}\" [(ngModel)]=\"{{nP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}\" type=\"text\" disabled>
+		</nz-input-group>
+		<ng-template #{{nP_Foreign_Entity_Name_Here}}SuffixButton>
+			<nz-button-group>
+				<button nz-button [nzType]=\"'primary'\" (click)=\"openSelect{{NP_Foreign_Entity_Name_Here}}Modal{{NP_Duplication_Number_Here}}()\" type=\"button\" style=\"margin: 0px\">
+					<i class=\"anticon anticon-search\"></i>{{l(\"Pick\")}}
+				</button>
+				<button nz-button [nzType]=\"'danger'\" (click)=\"set{{NP_Name_Here}}Null()\" type=\"button\" style=\"margin: 0px\">
+					<i class=\"anticon anticon-close\"></i>
+				</button>
+			</nz-button-group>
+		</ng-template>
+	</se>
+		 "
+					}
+				]
+		},
+		{
+			"placeholder" : "{{NP_Looped_Edit_Bind_Here}}",
+			"templates" : [
+					{
+					"relation" : "single",
+					"content" : "this.{{entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}} = result.{{nP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}};
+		 "
+					}
+				]
+		},
+		{
+			"placeholder" : "{{NP_Looped_Modal_Here}}",
+			"templates" : [
+					{
+					"relation" : "single",
+					"preventDuplicate":true,
+					"content" : "<{{nP_Foreign_Entity_Name_Here}}LookupTableModal #{{nP_Foreign_Entity_Name_Here}}LookupTableModal{{NP_Duplication_Number_Here}} (modalSave)=\"getNew{{NP_Name_Here}}()\"></{{nP_Foreign_Entity_Name_Here}}LookupTableModal>
+		 "
+					}
+				]
+		}
+	],
+"enumTemplates":[
+		{
+			"placeholder" : "{{Enum_Option_Looped_Template_Here}}",
+			"content" : "
+					<nz-option [nzLabel]=\"l(\'Enum_{{Enum_Name_Here}}_{{Enum_Property_Value_Here}}\')\" [nzValue]=\"{{Enum_Property_Value_Here}}\"></nz-option>"
+		}
+	],
+"conditionalTemplates":[
+		{
+			"placeholder": "{{Required}}",
+			"condition": "{{Property_Required_Here}} == true",
+			"content": " required"
+		},
+		{
+			"placeholder": "{{Regex}}",
+			"condition": "{{Property_Regex_Here}} != ''",
+			"content": " pattern=\"{{Property_Regex_Here}}\""
+		},
+		{
+			"placeholder": "{{MaxLengthHere}}",
+			"condition": "{{Property_MaxLength_Here}} > -1",
+			"content": " maxlength=\"{{Property_MaxLength_Here}}\""
+		},
+		{
+			"placeholder": "{{MinLengthHere}}",
+			"condition": "{{Property_MinLength_Here}} > -1",
+			"content": " minlength=\"{{Property_MinLength_Here}}\""
+		},
+		{
+			"placeholder": "{{MaxValue}}",
+			"condition": "{{Property_Is_Range_Set_Here}} == true",
+			"content": " max=\"Property_RangeMax_Here\""
+		},
+		{
+			"placeholder": "{{MinValue}}",
+			"condition": "{{Property_Is_Range_Set_Here}} == true",
+			"content": " min=\"Property_RangeMin_Here\""
+		}
+	]
+}

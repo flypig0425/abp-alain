@@ -1,0 +1,40 @@
+﻿<div>
+    <form nz-form>
+        <nz-form-item>
+            <nz-form-control>
+                <nz-input-group nzSearch [nzSuffix]="suffixButton">
+                    <input type="text" nz-input autoFocus name="filterText" [(ngModel)]="filterText" placeholder="{{l('SearchWithThreeDot')}}">
+                </nz-input-group>
+                <ng-template #suffixButton>
+                    <button nz-button nzType="primary" nzSearch (click)="refresh()" type="submit">Search</button>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+
+    <nz-table #nzTable [nzFrontPagination]="false" [nzData]="dataItems" [nzTotal]="totalItems" [(nzPageIndex)]="pageNumber" [(nzPageSize)]="pageSize"
+        [nzLoading]="isTableLoading" [nzBordered]="true" [nzShowSizeChanger]="true" (nzPageIndexChange)="refresh()" (nzPageSizeChange)="refresh()">
+        <thead>
+            <tr>
+                <th  [style]="{'width':'130px','text-align':'center'}">{{l('Actions')}}</th>
+                <th>{{ l('{{NP_Display_Property_Name_Here}}')}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of nzTable.data">
+                <td>
+                    <button nz-button [nzType]="'primary'" type="button" (click)="setAndSave(item)">
+                        <i class="anticon anticon-select"></i>
+                        {{l("Select")}}
+                    </button>
+                </td>
+                <td>{{item.displayName}}</td>
+            </tr>
+    </nz-table>
+
+    <div class="modal-footer">
+        <button nz-button [nzType]="'primary'" [disabled]="saving" type="button"  (click)="close()">{{l("Close")}}</button>
+    </div>
+</div>
+
+
